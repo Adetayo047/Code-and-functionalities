@@ -257,5 +257,126 @@ Ensure your domain is now accessible via `https://api-aichat.hayokmedicare.ng`.
 
 ---
 
-Let me know if you’d like further details on any step!
+### 4. Enable the Configuration
+Create a symbolic link to enable the site:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/api-aichat /etc/nginx/sites-enabled/
+```
+
+### 5. Test Nginx Configuration
+Check for syntax errors:
+
+```bash
+sudo nginx -t
+```
+
+### 6. Restart Nginx
+Restart Nginx to apply the changes:
+
+```bash
+sudo systemctl restart nginx
+```
+
+---
+
+## Steps to Implement ACME Challenge for HTTPS Setup
+
+### 1. Open the Nginx Configuration File
+
+```bash
+sudo nano /etc/nginx/sites-available/api-aichat
+```
+
+### 2. Edit the File
+Add the `location /.well-known/acme-challenge/` block as shown below. Ensure this block is above or separate from the general `/` location block to prevent overrides:
+
+```nginx
+location /.well-known/acme-challenge/ {
+    root /var/www/html;
+    allow all;
+}
+```
+
+### 3. Create the Directory for ACME Challenges
+
+```bash
+sudo mkdir -p /var/www/html/.well-known/acme-challenge
+```
+
+### 4. Set Permissions
+Ensure that Nginx can read the directory:
+
+```bash
+sudo chown -R www-data:www-data /var/www/html/.well-known
+sudo chmod -R 755 /var/www/html/.well-known
+```
+
+### 5. Test the Nginx Configuration
+Check for syntax errors:
+
+```bash
+sudo nginx -t
+```
+
+### 6. Reload Nginx
+Apply the changes:
+
+```bash
+sudo systemctl reload nginx
+```
+
+### 7. Verify the ACME Challenge Location
+Test if the `.well-known/acme-challenge/` directory is accessible:
+
+```bash
+curl http://api-aichat.hayokmedicare.ng/.well-known/acme-challenge/test
+```
+
+### 8. Retry Certbot
+Run Certbot to obtain the SSL certificate:
+
+```bash
+sudo certbot --nginx -d api-aichat.hayokmedicare.ng
+```
+
+This setup ensures that requests to `/.well-known/acme-challenge/` are served correctly while forwarding other traffic to your FastAPI application.
+
+---
+
+## What Happens After This?
+
+### Incoming Requests:
+- When someone visits `http://api-aichat.hayokmedicare.ng`, Nginx intercepts the request and forwards it to `http://127.0.0.1:8002` (your FastAPI app).
+
+### Domain Name Resolution:
+- Ensure your domain (`api-aichat.hayokmedicare.ng`) points to your server's public IP address in your DNS settings.
+
+---
+
+## Verifying Your Setup
+1. Visit `http://api-aichat.hayokmedicare.ng` in your browser.
+2. If everything is set up correctly, you should see your FastAPI app's response (e.g., `{ "API": "FAQ" }`).
+
+---
+
+## Optional: Add HTTPS (Secure Connections)
+To secure your domain with HTTPS, use Let's Encrypt. Follow these steps:
+
+### Install Certbot:
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+```
+
+### Run Certbot to Secure Your Domain:
+
+```bash
+sudo certbot --nginx -d api-aichat.hayokmedicare.ng
+```
+
+### Verify:
+Ensure your domain is now accessible via `https://api-aichat.hayokmedicare.ng`.
+
+---
 
