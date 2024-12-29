@@ -149,3 +149,113 @@ hint:   git config pull.ff only       # fast-forward only
 - [ ]  sudo chmod -R 777 /mnt/SDD1/Llama3_RAG/   —-  this is to give permision to the folder
 - [ ]  sudo lsof -i :8000 check the PID of the process using it
 - [ ]  kill -9 PID
+
+# Web Server Proxy Setup for FastAPI Application
+
+This guide explains how to link your domain name (`api-aichat.hayokmedicare.ng`) to your FastAPI application running on your server. The process uses a web server proxy (such as Nginx) to forward requests from your domain to the locally running FastAPI app.
+
+---
+
+## Why Use a Web Server Proxy?
+A web server proxy acts as an intermediary between your domain and the FastAPI app running locally. For example, your FastAPI app listens on `http://127.0.0.1:8002` (local IP and port). The proxy forwards requests from `http://api-aichat.hayokmedicare.ng` to this internal app. This setup is essential for:
+
+- Using domain names instead of IP addresses.
+- Enabling HTTPS (secure connections).
+- Handling load balancing or scaling in production environments.
+
+---
+
+## How to Set Up Nginx as a Proxy for Your FastAPI App
+
+### 1. Install Nginx (if not already installed)
+Run the following commands on your server:
+
+```bash
+sudo apt update
+sudo apt install nginx
+```
+
+### 2. Create an Nginx Configuration File
+Create a new configuration file for your domain in the Nginx directory:
+
+```bash
+sudo nano /etc/nginx/sites-available/api-aichat
+```
+
+### 3. Add Configuration for Your Domain
+Paste the following content into the file:
+
+```nginx
+server {
+    listen 80;  # Port 80 for HTTP
+    server_name api-aichat.hayokmedicare.ng;  # Your domain name
+
+    location / {
+        proxy_pass http://127.0.0.1:8002;  # Forward requests to your FastAPI app
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+### 4. Enable the Configuration
+Create a symbolic link to enable the site:
+
+```bash
+sudo ln -s /etc/nginx/sites-available/api-aichat /etc/nginx/sites-enabled/
+```
+
+### 5. Test Nginx Configuration
+Check for syntax errors:
+
+```bash
+sudo nginx -t
+```
+
+### 6. Restart Nginx
+Restart Nginx to apply the changes:
+
+```bash
+sudo systemctl restart nginx
+```
+
+---
+
+## What Happens After This?
+
+### Incoming Requests:
+- When someone visits `http://api-aichat.hayokmedicare.ng`, Nginx intercepts the request and forwards it to `http://127.0.0.1:8002` (your FastAPI app).
+
+### Domain Name Resolution:
+- Ensure your domain (`api-aichat.hayokmedicare.ng`) points to your server's public IP address in your DNS settings.
+
+---
+
+## Verifying Your Setup
+1. Visit `http://api-aichat.hayokmedicare.ng` in your browser.
+2. If everything is set up correctly, you should see your FastAPI app's response (e.g., `{ "API": "FAQ" }`).
+
+---
+
+## Optional: Add HTTPS (Secure Connections)
+To secure your domain with HTTPS, use Let's Encrypt. Follow these steps:
+
+### Install Certbot:
+
+```bash
+sudo apt install certbot python3-certbot-nginx
+```
+
+### Run Certbot to Secure Your Domain:
+
+```bash
+sudo certbot --nginx -d api-aichat.hayokmedicare.ng
+```
+
+### Verify:
+Ensure your domain is now accessible via `https://api-aichat.hayokmedicare.ng`.
+
+---
+
+Let me know if you’d like further details on any step!
+
