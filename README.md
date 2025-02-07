@@ -379,4 +379,9 @@ sudo certbot --nginx -d api-aichat.hayokmedicare.ng
 Ensure your domain is now accessible via `https://api-aichat.hayokmedicare.ng`.
 
 ---
+Alternative Approach (Without Restarting All Containers)
+Instead of restarting Docker completely, you can try:
 
+sudo systemctl restart nvidia-persistenced
+docker restart <container_id>
+---
