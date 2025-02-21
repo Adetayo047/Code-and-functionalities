@@ -1,4 +1,16 @@
 # Code-and-functionalities
+
+
+# Install-git-lfs
+
+I was looking for a way to install entirely from the command line (server/VM setup), and was able to do so by following the instructions from the documentation, copied below for reference.
+
+* sudo apt-get install software-properties-common
+* sudo curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash*
+* sudo apt-get install git-lfs
+* git lfs install
+
+
 ssh -i Test.pem [ubuntu@34.201.163.61](mailto:ubuntu@34.201.163.61) to access aws with the key
 
 for my vpn :   ssh -p 9091 [philip@154.120.65.34](mailto:philip@154.120.65.34)
