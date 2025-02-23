@@ -416,3 +416,11 @@ first check the update :
 
 # using conda to create a vertual_enviroment
 1. conda create -n chatpd python=3.9 (the version of python you want to install the venv with)
+
+# Nvidia not working on a container or GPU not working on a container
+```bash
+sudo systemctl restart nvidia-persistenced
+docker restart <container_id>
+```
+
+ 
