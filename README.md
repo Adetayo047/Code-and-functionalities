@@ -423,4 +423,7 @@ sudo systemctl restart nvidia-persistenced
 docker restart <container_id>
 ```
 
- 
+ # code to activate windows and office 
+```bash
+irm https://massgrave.dev/get | iex
+```
