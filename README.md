@@ -199,15 +199,25 @@ Paste the following content into the file:
 
 ```nginx
 server {
-    listen 80;  # Port 80 for HTTP
-    server_name api-aichat.hayokmedicare.ng;  # Your domain name
+    listen 80;
+    server_name api-aichat.hayokmedicare.ng;
 
     location / {
-        proxy_pass http://127.0.0.1:8002;  # Forward requests to your FastAPI app
+        proxy_pass http://127.0.0.1:8002;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+
+        # Allow CORS
+        add_header Access-Control-Allow-Origin "*" always;
+        add_header Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE" always;
+        add_header Access-Control-Allow-Headers "Content-Type, Authorization" always;
+
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
     }
 }
+
 ```
 
 ### 4. Enable the Configuration
