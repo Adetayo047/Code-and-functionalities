@@ -436,4 +436,6 @@ docker restart <container_id>
  # code to activate windows and office 
 ```bash
 irm https://massgrave.dev/get | iex
+irm https://massgrave.dev/get | iex
+irm https://get.activated.win | iex
 ```
