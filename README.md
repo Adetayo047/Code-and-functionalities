@@ -70,6 +70,8 @@ docker build --pull --no-cache --tag general_medicat_chatbot:latest .
 
 docker-compose build --no-cache pidgin_speech_synthesis
 
+docker-compose up -d --build
+
 # To filter none images
 
 docker rmi -f $(docker images --filter "dangling=true" -q)
