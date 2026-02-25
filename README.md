@@ -441,3 +441,25 @@ irm https://massgrave.dev/get | iex
 irm https://massgrave.dev/get | iex
 irm https://get.activated.win | iex
 ```
+# Code to set Memory limit
+# HIGH PRIORITY
+```bash
+docker update --cpus=6.0  b4f34dfc04ba  # vllm-qwen:8000
+docker update --cpus=4.0  244410d0e6e8  # smart_medicare
+docker update --cpus=3.0  afe1f1080e0c  # speech_synthesis
+```
+# MEDIUM PRIORITY
+```bash  
+docker update --cpus=2.0  8e089dbc13e0  # weaviate:8081
+docker update --cpus=2.0  d5fff98aaca6  # sentence-transformers
+docker update --cpus=2.0  215a80f09a57  # multilang-translation
+```
+# LOW PRIORITY
+```bash
+docker update --cpus=0.5  678f7060b01c  # dcgm-exporter
+```
+run them like this
+```bash
+docker stats --no-stream
+```
+run this so you see what you did 
